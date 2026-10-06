@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Smart Task & Productivity Dashboard — Plan better, work smarter, get more done. A modern task management and productivity tracking application.">
+    <title>Smart Task & Productivity Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ===== Landing Page Specific Styles ===== */
+        .landing-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation */
+        .landing-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 40px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-logo {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.15rem;
+        }
+
+        .nav-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 60px;
+            padding: 80px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+        }
+
+        .hero-content {
+            max-width: 540px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: var(--primary-50);
+            color: var(--primary-600);
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: var(--radius-full);
+            margin-bottom: 20px;
+        }
+
+        [data-theme="dark"] .hero-badge {
+            background: rgba(99, 102, 241, 0.12);
+            color: var(--primary-400);
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.15;
+            margin-bottom: 18px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-title .gradient-text {
+            background: linear-gradient(135deg, var(--primary-500), #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+            margin-top: 48px;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .hero-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Hero Visual */
+        .hero-visual {
+            max-width: 500px;
+            flex: 1;
+            position: relative;
+        }
+
+        .hero-mockup {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+        }
+
+        .mockup-header {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .mockup-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .mockup-dot:nth-child(1) { background: #ef4444; }
+        .mockup-dot:nth-child(2) { background: #f59e0b; }
+        .mockup-dot:nth-child(3) { background: #10b981; }
+
+        .mockup-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .mockup-stat {
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            text-align: center;
+        }
+
+        .mockup-stat-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-500);
+        }
+
+        .mockup-stat-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+
+        .mockup-task {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+        }
+
+        .mockup-task-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .mockup-task-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            flex: 1;
+        }
+
+        .mockup-task-badge {
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+        }
+
+        .hero-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(99,102,241,0.15), transparent 70%);
+            top: -50px;
+            right: -50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 80px 40px;
+            background: var(--bg-secondary);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            text-align: center;
+            transition: all var(--transition-base);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin: 0 auto 16px;
+        }
+
+        .feature-card:nth-child(1) .feature-icon { background: var(--primary-50); color: var(--primary-600); }
+        .feature-card:nth-child(2) .feature-icon { background: var(--success-light); color: var(--success); }
+        .feature-card:nth-child(3) .feature-icon { background: var(--warning-light); color: var(--warning); }
+        .feature-card:nth-child(4) .feature-icon { background: var(--danger-light); color: var(--danger); }
+        .feature-card:nth-child(5) .feature-icon { background: var(--info-light); color: var(--info); }
+        .feature-card:nth-child(6) .feature-icon { background: #f0fdf4; color: #15803d; }
+
+        [data-theme="dark"] .feature-card:nth-child(1) .feature-icon { background: rgba(99,102,241,0.12); }
+        [data-theme="dark"] .feature-card:nth-child(2) .feature-icon { background: rgba(16,185,129,0.12); }
+        [data-theme="dark"] .feature-card:nth-child(3) .feature-icon { background: rgba(245,158,11,0.12); }
+        [data-theme="dark"] .feature-card:nth-child(4) .feature-icon { background: rgba(239,68,68,0.12); }
+        [data-theme="dark"] .feature-card:nth-child(5) .feature-icon { background: rgba(59,130,246,0.12); }
+        [data-theme="dark"] .feature-card:nth-child(6) .feature-icon { background: rgba(21,128,61,0.12); }
+
+        .feature-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .landing-footer {
+            padding: 32px 40px;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .footer-text a {
+            color: var(--primary-500);
+            font-weight: 500;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-page">
+        <!-- Navigation -->
+        <nav class="landing-nav" id="landing-nav">
+            <a href="/" class="nav-brand">
+                <div class="nav-logo"><i class="fas fa-bolt"></i></div>
+                <span class="nav-title">TaskFlow</span>
+            </a>
+            <div class="nav-links">
+                <button class="btn-icon theme-toggle" id="theme-toggle" title="Toggle theme">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+                <a href="/login" class="btn btn-ghost">Login</a>
+                <a href="/register" class="btn btn-primary">Get Started</a>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-sparkles"></i>
+                    Productivity Reimagined
+                </div>
+                <h1 class="hero-title">
+                    Plan better.<br>
+                    Work <span class="gradient-text">smarter</span>.<br>
+                    Get more done.
+                </h1>
+                <p class="hero-subtitle">
+                    A powerful task management dashboard to organize your work, 
+                    track productivity, and achieve your goals — all in one beautiful interface.
+                </p>
+                <div class="hero-actions">
+                    <a href="/register" class="btn btn-primary btn-lg">
+                        <i class="fas fa-rocket"></i>
+                        Get Started Free
+                    </a>
+                    <a href="/login" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">100%</div>
+                        <div class="hero-stat-label">Free to Use</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">Real-time</div>
+                        <div class="hero-stat-label">Analytics</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">Secure</div>
+                        <div class="hero-stat-label">Authentication</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-glow"></div>
+                <div class="hero-mockup">
+                    <div class="mockup-header">
+                        <div class="mockup-dot"></div>
+                        <div class="mockup-dot"></div>
+                        <div class="mockup-dot"></div>
+                    </div>
+                    <div class="mockup-stats">
+                        <div class="mockup-stat">
+                            <div class="mockup-stat-value">24</div>
+                            <div class="mockup-stat-label">Total Tasks</div>
+                        </div>
+                        <div class="mockup-stat">
+                            <div class="mockup-stat-value">18</div>
+                            <div class="mockup-stat-label">Completed</div>
+                        </div>
+                        <div class="mockup-stat">
+                            <div class="mockup-stat-value">6</div>
+                            <div class="mockup-stat-label">Pending</div>
+                        </div>
+                    </div>
+                    <div class="mockup-task">
+                        <div class="mockup-task-dot" style="background: var(--success);"></div>
+                        <span class="mockup-task-text">Complete project documentation</span>
+                        <span class="mockup-task-badge badge-completed">Done</span>
+                    </div>
+                    <div class="mockup-task">
+                        <div class="mockup-task-dot" style="background: var(--danger);"></div>
+                        <span class="mockup-task-text">Review pull requests</span>
+                        <span class="mockup-task-badge badge-high">High</span>
+                    </div>
+                    <div class="mockup-task">
+                        <div class="mockup-task-dot" style="background: var(--warning);"></div>
+                        <span class="mockup-task-text">Design new dashboard UI</span>
+                        <span class="mockup-task-badge badge-medium">Medium</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="section-header">
+                <h2 class="section-title">Everything You Need</h2>
+                <p class="section-subtitle">Powerful features to help you manage tasks, track progress, and boost your productivity.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3 class="feature-title">Task Management</h3>
+                    <p class="feature-desc">Create, organize, and prioritize tasks with categories, due dates, and priority levels.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3 class="feature-title">Analytics Dashboard</h3>
+                    <p class="feature-desc">Visualize your productivity with interactive charts and real-time statistics.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 class="feature-title">Smart Search & Filters</h3>
+                    <p class="feature-desc">Find any task instantly with powerful search, filtering, and sorting options.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Secure Authentication</h3>
+                    <p class="feature-desc">Your data is protected with JWT authentication and bcrypt password hashing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                    <h3 class="feature-title">Dark Mode</h3>
+                    <p class="feature-desc">Switch between light and dark themes for comfortable viewing any time of day.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Fully Responsive</h3>
+                    <p class="feature-desc">Access your dashboard from any device — desktop, tablet, or mobile phone.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="landing-footer">
+            <p class="footer-text">
+                Built with <i class="fas fa-heart" style="color: var(--danger);"></i> by 
+                <a href="#">Hariharan</a> · 
+                Smart Task & Productivity Dashboard © 2026
+            </p>
+        </footer>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            updateThemeIcon(next);
+        });
+
+        function updateThemeIcon(theme) {
+            themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Redirect to dashboard if already logged in
+        const token = localStorage.getItem('token');
+        if (token) {
+            // Verify the token is still valid
+            fetch('/api/auth/me', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/dashboard';
+                }
+            })
+            .catch(() => {});
+        }
+    </script>
+</body>
+</html>

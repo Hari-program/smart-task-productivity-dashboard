@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login to your Smart Task Dashboard account.">
+    <title>Login — TaskFlow</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ===== Auth Page Styles ===== */
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-page::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(99,102,241,0.08), transparent 70%);
+            top: -100px;
+            right: -100px;
+            pointer-events: none;
+        }
+
+        .auth-page::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(139,92,246,0.06), transparent 70%);
+            bottom: -100px;
+            left: -100px;
+            pointer-events: none;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 440px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .auth-logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+            border-radius: var(--radius-md);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+
+        .auth-brand-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .auth-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 36px 32px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .auth-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .auth-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+        }
+
+        .auth-form .form-group {
+            margin-bottom: 18px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper .form-input {
+            padding-left: 42px;
+        }
+
+        .input-wrapper .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .input-wrapper .toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+
+        .input-wrapper .toggle-password:hover {
+            color: var(--text-primary);
+        }
+
+        .auth-submit {
+            width: 100%;
+            margin-top: 6px;
+        }
+
+        .auth-divider {
+            text-align: center;
+            margin: 24px 0;
+            position: relative;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .auth-footer a {
+            color: var(--primary-500);
+            font-weight: 500;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-error {
+            background: var(--danger-light);
+            color: var(--danger);
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .auth-error.visible {
+            display: flex;
+        }
+
+        [data-theme="dark"] .auth-error {
+            background: rgba(239, 68, 68, 0.12);
+        }
+
+        .theme-toggle-auth {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: var(--radius-md);
+            z-index: 10;
+            transition: all var(--transition-fast);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .theme-toggle-auth:hover {
+            color: var(--warning);
+            border-color: var(--primary-300);
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <button class="theme-toggle-auth" id="theme-toggle" title="Toggle theme">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+
+    <div class="auth-page">
+        <div class="auth-container">
+            <!-- Brand -->
+            <div class="auth-brand">
+                <div class="auth-logo"><i class="fas fa-bolt"></i></div>
+                <div class="auth-brand-name">TaskFlow</div>
+            </div>
+
+            <!-- Login Card -->
+            <div class="auth-card">
+                <h1 class="auth-title">Welcome back</h1>
+                <p class="auth-subtitle">Sign in to your account to continue</p>
+
+                <!-- Error Message -->
+                <div class="auth-error" id="auth-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="error-text"></span>
+                </div>
+
+                <!-- Login Form -->
+                <form class="auth-form" id="login-form">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input type="email" id="email" class="form-input" placeholder="you@example.com" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="password" class="form-input" placeholder="Enter your password" required autocomplete="current-password">
+                            <button type="button" class="toggle-password" id="toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg auth-submit" id="login-btn">
+                        <span id="btn-text">Sign In</span>
+                        <div class="spinner" id="btn-spinner" style="display:none; width:20px; height:20px; border-width:2px;"></div>
+                    </button>
+                </form>
+
+                <div class="auth-footer">
+                    Don't have an account? <a href="/register">Create one</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+
+        themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            themeIcon.className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        });
+
+        // Redirect if already logged in
+        if (localStorage.getItem('token')) {
+            window.location.href = '/dashboard';
+        }
+
+        // Login form handler
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('auth-error');
+            const errorText = document.getElementById('error-text');
+            const btnText = document.getElementById('btn-text');
+            const btnSpinner = document.getElementById('btn-spinner');
+
+            // Hide previous errors
+            errorDiv.classList.remove('visible');
+
+            // Validation
+            if (!email || !password) {
+                errorText.textContent = 'Please fill in all fields.';
+                errorDiv.classList.add('visible');
+                return;
+            }
+
+            // Show loading
+            btnText.textContent = 'Signing in...';
+            btnSpinner.style.display = 'block';
+            document.getElementById('login-btn').disabled = true;
+
+            try {
+                const data = await API.login({ email, password });
+
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    showToast('Login successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 500);
+                } else {
+                    errorText.textContent = data.message || 'Invalid email or password.';
+                    errorDiv.classList.add('visible');
+                }
+            } catch (error) {
+                errorText.textContent = 'Server unavailable. Please try again later.';
+                errorDiv.classList.add('visible');
+            } finally {
+                btnText.textContent = 'Sign In';
+                btnSpinner.style.display = 'none';
+                document.getElementById('login-btn').disabled = false;
+            }
+        });
+
+        // Toggle password visibility
+        document.getElementById('toggle-password').addEventListener('click', () => {
+            const pwd = document.getElementById('password');
+            const icon = document.querySelector('#toggle-password i');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                pwd.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Your productivity dashboard — manage tasks, track progress, and stay organized.">
+    <title>Dashboard — TaskFlow</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Sidebar Overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="dashboard-layout">
+        <!-- ====== Sidebar ====== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><i class="fas fa-bolt"></i></div>
+                <div class="sidebar-brand">
+                    TaskFlow
+                    <span>Productivity Dashboard</span>
+                </div>
+                <button class="sidebar-close" id="sidebar-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-title">Menu</div>
+
+                <a class="sidebar-link active" data-view="dashboard" id="nav-dashboard">
+                    <i class="fas fa-th-large"></i>
+                    Dashboard
+                </a>
+                <a class="sidebar-link" data-view="all-tasks" id="nav-all-tasks">
+                    <i class="fas fa-list-check"></i>
+                    All Tasks
+                    <span class="count" id="nav-count-all">0</span>
+                </a>
+                <a class="sidebar-link" data-view="today" id="nav-today">
+                    <i class="fas fa-calendar-day"></i>
+                    Today
+                    <span class="count" id="nav-count-today">0</span>
+                </a>
+                <a class="sidebar-link" data-view="upcoming" id="nav-upcoming">
+                    <i class="fas fa-calendar-week"></i>
+                    Upcoming
+                </a>
+                <a class="sidebar-link" data-view="completed" id="nav-completed">
+                    <i class="fas fa-circle-check"></i>
+                    Completed
+                    <span class="count" id="nav-count-completed">0</span>
+                </a>
+                <a class="sidebar-link" data-view="important" id="nav-important">
+                    <i class="fas fa-star"></i>
+                    Important
+                    <span class="count" id="nav-count-important">0</span>
+                </a>
+
+                <div class="sidebar-section-title" style="margin-top: 16px;">Settings</div>
+                <a class="sidebar-link" data-view="settings" id="nav-settings">
+                    <i class="fas fa-gear"></i>
+                    Settings
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a class="sidebar-link" id="sidebar-logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- ====== Main Content ====== -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="page-title" id="page-title">Dashboard</h1>
+                </div>
+
+                <div class="header-search" id="header-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search tasks..." id="search-input">
+                </div>
+
+                <div class="header-right">
+                    <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+                        <i class="fas fa-moon" id="theme-icon"></i>
+                    </button>
+                    <button class="notification-btn" id="notification-btn" title="Notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-dot" id="notification-dot" style="display:none;"></span>
+                    </button>
+                    <div class="user-menu" id="user-menu" style="position:relative;">
+                        <div class="user-avatar" id="user-avatar">U</div>
+                        <span class="user-name" id="user-name">User</span>
+                        <i class="fas fa-chevron-down" style="font-size:0.7rem; color:var(--text-muted);"></i>
+
+                        <!-- User Dropdown -->
+                        <div class="user-dropdown" id="user-dropdown">
+                            <div class="dropdown-item" id="dropdown-profile">
+                                <i class="fas fa-user"></i>
+                                Profile
+                            </div>
+                            <div class="dropdown-item" id="dropdown-settings" data-view="settings">
+                                <i class="fas fa-gear"></i>
+                                Settings
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-item danger" id="dropdown-logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content" id="dashboard-content">
+
+                <!-- ====== Dashboard View ====== -->
+                <div class="view-section" id="view-dashboard">
+                    <!-- Stats Grid -->
+                    <div class="stats-grid" id="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-list-check"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">Total Tasks</div>
+                                <div class="stat-value" id="stat-total">
+                                    <div class="skeleton skeleton-text" style="width:60px; height:28px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-circle-check"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">Completed</div>
+                                <div class="stat-value" id="stat-completed">
+                                    <div class="skeleton skeleton-text" style="width:60px; height:28px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">Pending</div>
+                                <div class="stat-value" id="stat-pending">
+                                    <div class="skeleton skeleton-text" style="width:60px; height:28px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-fire"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">High Priority</div>
+                                <div class="stat-value" id="stat-high-priority">
+                                    <div class="skeleton skeleton-text" style="width:60px; height:28px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Grid -->
+                    <div class="content-grid">
+                        <div class="chart-card">
+                            <div class="chart-card-header">
+                                <span class="chart-card-title">Task Completion</span>
+                            </div>
+                            <div class="chart-card-body">
+                                <canvas id="completionChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-card-header">
+                                <span class="chart-card-title">Weekly Productivity</span>
+                            </div>
+                            <div class="chart-card-body">
+                                <canvas id="weeklyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-grid">
+                        <div class="chart-card">
+                            <div class="chart-card-header">
+                                <span class="chart-card-title">Priority Distribution</span>
+                            </div>
+                            <div class="chart-card-body">
+                                <canvas id="priorityChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="task-section">
+                            <div class="task-section-header">
+                                <span class="task-section-title">
+                                    <i class="fas fa-calendar-day" style="margin-right:6px; color:var(--primary-500);"></i>
+                                    Today's Tasks
+                                </span>
+                            </div>
+                            <div class="task-list" id="today-tasks-preview">
+                                <div class="loading-overlay">
+                                    <div class="spinner"></div>
+                                    <span>Loading tasks...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ====== All Tasks / Today / Upcoming / Completed / Important Views ====== -->
+                <div class="view-section" id="view-tasks" style="display:none;">
+                    <!-- Toolbar -->
+                    <div class="toolbar">
+                        <div class="toolbar-left">
+                            <select class="filter-select" id="filter-status">
+                                <option value="all">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                            <select class="filter-select" id="filter-priority">
+                                <option value="all">All Priority</option>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                            <select class="filter-select" id="filter-category">
+                                <option value="all">All Categories</option>
+                                <option value="Work">Work</option>
+                                <option value="Study">Study</option>
+                                <option value="Personal">Personal</option>
+                                <option value="Project">Project</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <select class="filter-select" id="filter-sort">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="due_date">Due Date</option>
+                                <option value="priority">Priority</option>
+                                <option value="updated">Recently Updated</option>
+                            </select>
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn btn-primary" id="add-task-btn">
+                                <i class="fas fa-plus"></i>
+                                Add Task
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Task List Container -->
+                    <div class="task-section">
+                        <div class="task-section-header">
+                            <span class="task-section-title" id="task-list-title">All Tasks</span>
+                            <span class="text-sm" style="color:var(--text-muted);" id="task-count">0 tasks</span>
+                        </div>
+                        <div class="task-list" id="task-list">
+                            <div class="loading-overlay">
+                                <div class="spinner"></div>
+                                <span>Loading tasks...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ====== Settings View ====== -->
+                <div class="view-section" id="view-settings" style="display:none;">
+                    <div class="card" style="max-width:600px;">
+                        <h2 style="font-size:1.2rem; font-weight:600; margin-bottom:24px;">
+                            <i class="fas fa-gear" style="margin-right:8px; color:var(--primary-500);"></i>
+                            Settings
+                        </h2>
+                        <div class="form-group">
+                            <label class="form-label">Theme</label>
+                            <div style="display:flex; gap:12px;">
+                                <button class="btn btn-secondary" id="settings-light">
+                                    <i class="fas fa-sun"></i> Light Mode
+                                </button>
+                                <button class="btn btn-secondary" id="settings-dark">
+                                    <i class="fas fa-moon"></i> Dark Mode
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top:24px;">
+                            <label class="form-label">Account</label>
+                            <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:8px;">
+                                Logged in as <strong id="settings-email">—</strong>
+                            </p>
+                            <p style="font-size:0.85rem; color:var(--text-muted);">
+                                Member since <span id="settings-created">—</span>
+                            </p>
+                        </div>
+                        <div style="margin-top:32px; padding-top:20px; border-top:1px solid var(--border-color);">
+                            <button class="btn btn-danger" id="settings-logout">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== Add/Edit Task Modal ====== -->
+    <div class="modal-overlay" id="task-modal-overlay">
+        <div class="modal" id="task-modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Add New Task</h2>
+                <button class="btn-icon" id="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="task-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="task-title">Task Title *</label>
+                        <input type="text" id="task-title" class="form-input" placeholder="What needs to be done?" required maxlength="255">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="task-description">Description</label>
+                        <textarea id="task-description" class="form-textarea" placeholder="Add more details..." rows="3"></textarea>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                        <div class="form-group">
+                            <label class="form-label" for="task-category">Category</label>
+                            <select id="task-category" class="form-select">
+                                <option value="Work">Work</option>
+                                <option value="Study">Study</option>
+                                <option value="Personal">Personal</option>
+                                <option value="Project">Project</option>
+                                <option value="Other" selected>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="task-priority">Priority</label>
+                            <select id="task-priority" class="form-select">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                        <div class="form-group">
+                            <label class="form-label" for="task-due-date">Due Date</label>
+                            <input type="date" id="task-due-date" class="form-input">
+                        </div>
+                        <div class="form-group" style="display:flex; align-items:flex-end; padding-bottom:4px;">
+                            <label class="checkbox-wrapper">
+                                <div class="custom-checkbox" id="task-important-checkbox"></div>
+                                <span style="font-size:0.9rem; color:var(--text-secondary);">
+                                    <i class="fas fa-star" style="color:var(--warning); margin-right:4px;"></i>
+                                    Mark as Important
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="modal-cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="modal-submit">
+                        <span id="modal-submit-text">Create Task</span>
+                        <div class="spinner" id="modal-spinner" style="display:none; width:18px; height:18px; border-width:2px;"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ====== Delete Confirm Modal ====== -->
+    <div class="modal-overlay" id="delete-modal-overlay">
+        <div class="modal" style="max-width:400px;">
+            <div class="confirm-dialog">
+                <div class="confirm-dialog-icon">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+                <h3 class="confirm-dialog-title">Delete Task?</h3>
+                <p class="confirm-dialog-text">This action cannot be undone. The task will be permanently removed.</p>
+                <div class="confirm-dialog-actions">
+                    <button class="btn btn-secondary" id="delete-cancel">Cancel</button>
+                    <button class="btn btn-danger" id="delete-confirm">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- JavaScript Files -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/tasks.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
